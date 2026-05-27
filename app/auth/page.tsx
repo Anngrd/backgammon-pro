@@ -49,14 +49,25 @@ export default function AuthPage() {
         const { data, error: signUpError } = await supabase.auth.signUp({ email, password });
         if (signUpError) throw signUpError;
         if (data.user) {
-          await supabase.from('profiles').insert({
-            id: data.user.id,
-            username: username || email.split('@')[0],
-            email,
-            games_played: 0,
-            games_won: 0,
-          });
-          setMessage(t.auth.confirmEmail[lang]);
+          // Non-critical — ignore errors if profiles table doesn't exist yet
+          try {
+            await supabase.from('profiles').upsert({
+              id: data.user.id,
+              username: username || email.split('@')[0],
+              email,
+              games_played: 0,
+              games_won: 0,
+            });
+          } catch {
+            // profiles table may not exist yet — auth still succeeds
+          }
+
+          // If email confirmation is disabled, user is already logged in
+          if (data.session) {
+            router.push('/profile');
+          } else {
+            setMessage(t.auth.confirmEmail[lang]);
+          }
         }
       } else {
         const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
@@ -81,18 +92,24 @@ export default function AuthPage() {
   };
 
   return (
-    <div className={`min-h-[calc(100vh-57px)] ${isDark ? 'bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950' : 'bg-gray-50'} flex items-center justify-center p-4`}>
+    <div className="min-h-[calc(100vh-56px)] bg-[#080E1A] flex items-center justify-center p-4">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="w-full max-w-md"
       >
         <div className="text-center mb-8">
-          <span className="text-4xl">🎲</span>
-          <h1 className="text-2xl font-black text-white mt-2">
-            Backgammon <span className="text-yellow-400">Pro</span>
+          <div className="flex justify-center mb-4">
+            <div className="relative w-10 h-10">
+              <div className="absolute inset-0 rounded-full border border-[#C9A84C]/20" />
+              <div className="absolute inset-[5px] rounded-full border border-[#C9A84C]/30" />
+              <div className="absolute inset-[11px] rounded-full bg-[#C9A84C]" />
+            </div>
+          </div>
+          <h1 className="text-2xl font-black text-[#E8E4DC] tracking-tight">
+            Backgammon <span className="text-[#C9A84C]">Pro</span>
           </h1>
-          <p className="text-white/50 text-sm mt-1">{t.auth.subtitle[lang]}</p>
+          <p className="text-[#E8E4DC]/40 text-sm mt-1">{t.auth.subtitle[lang]}</p>
         </div>
 
         {/* Supabase not configured banner */}
@@ -113,7 +130,7 @@ export default function AuthPage() {
           </motion.div>
         )}
 
-        <div className={`bg-gray-900 border border-white/10 rounded-2xl p-6 shadow-2xl ${!SUPABASE_CONFIGURED ? 'opacity-60 pointer-events-none select-none' : ''}`}>
+        <div className={`bg-[#0F1725] border border-white/6 rounded-2xl p-6 shadow-2xl ${!SUPABASE_CONFIGURED ? 'opacity-60 pointer-events-none select-none' : ''}`}>
           {/* Mode toggle */}
           <div className="flex rounded-xl bg-black/30 p-1 mb-6">
             {(['signin', 'signup'] as const).map(m => (
@@ -189,7 +206,7 @@ export default function AuthPage() {
               whileTap={{ scale: 0.98 }}
               type="submit"
               disabled={loading}
-              className="w-full py-3 rounded-xl bg-gradient-to-r from-yellow-500 to-orange-500 text-white font-bold shadow-lg disabled:opacity-50"
+              className="w-full py-3 rounded-xl bg-[#C9A84C] hover:bg-[#E2C97E] text-[#080E1A] font-bold shadow-lg shadow-[#C9A84C]/15 transition-colors disabled:opacity-40"
             >
               {loading
                 ? t.auth.loading[lang]
