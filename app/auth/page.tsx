@@ -15,13 +15,29 @@ const SUPABASE_CONFIGURED =
 
 function classifyError(msg: string, lang: 'en' | 'ru'): string {
   const lower = msg.toLowerCase();
-  if (lower.includes('invalid') || lower.includes('credentials') || lower.includes('password')) {
+  if (lower.includes('invalid') || lower.includes('credentials')) {
     return t.auth.errorInvalidCredentials[lang];
   }
   if (lower.includes('fetch') || lower.includes('network') || lower.includes('failed to fetch') || lower.includes('placeholder')) {
     return t.auth.errorNetwork[lang];
   }
-  return t.auth.errorGeneric[lang];
+  if (lower.includes('email') && lower.includes('rate')) {
+    return lang === 'ru' ? 'Слишком много попыток. Подождите немного.' : 'Too many attempts. Please wait a moment.';
+  }
+  if (lower.includes('already registered') || lower.includes('already exists') || lower.includes('user already')) {
+    return lang === 'ru' ? 'Этот email уже зарегистрирован. Войдите в аккаунт.' : 'This email is already registered. Sign in instead.';
+  }
+  if (lower.includes('password') && (lower.includes('least') || lower.includes('short') || lower.includes('characters'))) {
+    return lang === 'ru' ? 'Пароль должен быть не менее 6 символов.' : 'Password must be at least 6 characters.';
+  }
+  if (lower.includes('email') && lower.includes('valid')) {
+    return lang === 'ru' ? 'Введите корректный email.' : 'Please enter a valid email address.';
+  }
+  if (lower.includes('signup') && lower.includes('disabled')) {
+    return lang === 'ru' ? 'Регистрация отключена. Обратитесь к администратору.' : 'Signups are disabled. Contact the administrator.';
+  }
+  // Fall back to the raw message so it's always diagnosable
+  return msg;
 }
 
 export default function AuthPage() {
