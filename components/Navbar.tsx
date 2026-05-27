@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { Sun, Moon, Trophy, User, Star, LogIn } from 'lucide-react';
 import { ProModal } from './ProModal';
 import { useLang } from '@/hooks/useLang';
 import { useTheme } from '@/hooks/useTheme';
@@ -21,67 +22,78 @@ export function Navbar({ onToggleTheme }: NavbarProps) {
 
   const isDark = theme === 'dark';
 
-  const linkClass = `text-sm font-medium transition-colors ${
-    isDark ? 'text-white/70 hover:text-white' : 'text-gray-600 hover:text-gray-900'
-  }`;
-  const btnClass = `p-2 rounded-lg transition-colors ${
-    isDark ? 'bg-white/10 hover:bg-white/20 text-white' : 'bg-gray-200 hover:bg-gray-300 text-gray-700'
-  }`;
-
   return (
     <>
-      <nav className={`w-full px-4 py-3 flex items-center justify-between border-b sticky top-0 z-40 ${
-        isDark ? 'bg-gray-950/90 border-white/5 backdrop-blur-md' : 'bg-white/90 border-gray-200 backdrop-blur-md'
-      }`}>
-        <Link href="/" className="flex items-center gap-2">
-          <span className="text-2xl">🎲</span>
-          <span className={`font-black text-lg ${isDark ? 'text-white' : 'text-gray-900'}`}>
-            Backgammon <span className="text-yellow-500">Pro</span>
+      <nav className="w-full px-5 py-0 flex items-center justify-between border-b border-white/5 sticky top-0 z-40 bg-[#080E1A]/95 backdrop-blur-md h-14">
+        {/* Logo */}
+        <Link href="/" className="flex items-center gap-2.5 group">
+          <div className="w-7 h-7 rounded-md bg-[#C9A84C]/10 border border-[#C9A84C]/30 flex items-center justify-center">
+            <div className="w-3.5 h-3.5 rounded-sm border-2 border-[#C9A84C] rotate-45 group-hover:rotate-[225deg] transition-transform duration-500" />
+          </div>
+          <span className="font-black text-base tracking-tight text-[#E8E4DC]">
+            Backgammon <span className="text-[#C9A84C]">Pro</span>
           </span>
         </Link>
 
-        <div className="hidden md:flex items-center gap-6">
-          <Link href="/leaderboard" className={linkClass}>{t.nav.leaderboard[lang]}</Link>
-          <Link href="/profile" className={linkClass}>{t.nav.profile[lang]}</Link>
+        {/* Center links */}
+        <div className="hidden md:flex items-center gap-7">
+          <Link href="/leaderboard" className="flex items-center gap-1.5 text-sm text-[#E8E4DC]/50 hover:text-[#E8E4DC] transition-colors">
+            <Trophy size={14} />
+            {t.nav.leaderboard[lang]}
+          </Link>
+          <Link href="/profile" className="flex items-center gap-1.5 text-sm text-[#E8E4DC]/50 hover:text-[#E8E4DC] transition-colors">
+            <User size={14} />
+            {t.nav.profile[lang]}
+          </Link>
         </div>
 
+        {/* Right controls */}
         <div className="flex items-center gap-2">
-          <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
+          {/* Language toggle */}
+          <motion.button
+            whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
             onClick={toggleLang}
-            className={`${btnClass} font-bold text-sm min-w-[38px]`}
+            className="px-2.5 py-1 rounded-md bg-white/5 hover:bg-white/10 text-[#E8E4DC]/60 hover:text-[#E8E4DC] text-xs font-bold transition-colors border border-white/5"
           >
             {lang === 'en' ? 'RU' : 'EN'}
           </motion.button>
 
-          <button onClick={onToggleTheme} className={btnClass}>
-            {isDark ? '☀️' : '🌙'}
+          {/* Theme toggle */}
+          <button
+            onClick={onToggleTheme}
+            className="p-1.5 rounded-md bg-white/5 hover:bg-white/10 text-[#E8E4DC]/60 hover:text-[#E8E4DC] transition-colors border border-white/5"
+          >
+            {isDark ? <Sun size={15} /> : <Moon size={15} />}
           </button>
 
-          <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
+          {/* PRO badge */}
+          <motion.button
+            whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}
             onClick={() => setShowProModal(true)}
-            className="px-3 py-1.5 rounded-lg bg-gradient-to-r from-yellow-500 to-orange-500 text-white text-xs font-black shadow-md"
+            className="flex items-center gap-1 px-2.5 py-1 rounded-md bg-[#C9A84C]/10 border border-[#C9A84C]/30 text-[#C9A84C] text-xs font-bold hover:bg-[#C9A84C]/20 transition-colors"
           >
-            {t.nav.pro[lang]}
+            <Star size={11} fill="currentColor" />
+            PRO
           </motion.button>
 
+          {/* Auth */}
           {!loading && (
             user ? (
               <Link href="/profile"
-                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-                  isDark ? 'bg-white/10 hover:bg-white/20 text-white' : 'bg-gray-200 hover:bg-gray-300 text-gray-800'
-                }`}
+                className="flex items-center gap-2 px-2.5 py-1 rounded-md bg-white/5 hover:bg-white/10 text-[#E8E4DC]/80 hover:text-[#E8E4DC] text-sm transition-colors border border-white/5"
               >
-                <div className="w-6 h-6 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white text-xs font-bold">
+                <div className="w-5 h-5 rounded-full bg-[#C9A84C]/20 border border-[#C9A84C]/40 flex items-center justify-center text-[#C9A84C] text-[10px] font-bold">
                   {(user.username || user.email || 'U')[0].toUpperCase()}
                 </div>
-                <span className="hidden sm:inline">{user.username || user.email?.split('@')[0]}</span>
+                <span className="hidden sm:inline text-xs">
+                  {user.username || user.email?.split('@')[0]}
+                </span>
               </Link>
             ) : (
               <Link href="/auth"
-                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-                  isDark ? 'bg-white/10 hover:bg-white/20 text-white' : 'bg-gray-200 hover:bg-gray-300 text-gray-700'
-                }`}
+                className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-white/5 hover:bg-white/10 text-[#E8E4DC]/60 hover:text-[#E8E4DC] text-xs font-medium transition-colors border border-white/5"
               >
+                <LogIn size={13} />
                 {t.nav.signIn[lang]}
               </Link>
             )

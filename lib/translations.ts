@@ -6,7 +6,7 @@ export const t = {
     leaderboard: { en: 'Leaderboard', ru: 'Рейтинг' },
     profile: { en: 'Profile', ru: 'Профиль' },
     signIn: { en: 'Sign In', ru: 'Войти' },
-    pro: { en: '⭐ PRO', ru: '⭐ ПРО' },
+    pro: { en: 'PRO', ru: 'ПРО' },
   },
   // Homepage
   home: {
@@ -66,8 +66,8 @@ export const t = {
     gameMode: { en: 'Choose game type', ru: 'Выберите тип игры' },
     opponent: { en: 'Choose opponent', ru: 'Выберите соперника' },
     playAs: { en: 'Play as', ru: 'Играть за' },
-    white: { en: '⚪ White', ru: '⚪ Белые' },
-    black: { en: '⚫ Black', ru: '⚫ Чёрные' },
+    white: { en: 'White', ru: 'Белые' },
+    black: { en: 'Black', ru: 'Чёрные' },
     start: { en: 'Start Game', ru: 'Начать игру' },
     startOnline: { en: 'Online Game →', ru: 'Онлайн игра →' },
     darkModeHint: { en: 'Dark Mode Rules:', ru: 'Правила тёмного режима:' },
@@ -164,8 +164,8 @@ export const t = {
     bar: { en: 'bar', ru: 'бар' },
     off: { en: 'off', ru: 'снято' },
     bearOff: { en: 'BEAR OFF', ru: 'СНЯТЬ' },
-    white: { en: '⚪ White', ru: '⚪ Белые' },
-    black: { en: '⚫ Black', ru: '⚫ Чёрные' },
+    white: { en: 'White', ru: 'Белые' },
+    black: { en: 'Black', ru: 'Чёрные' },
   },
   // Winner Modal
   winner: {

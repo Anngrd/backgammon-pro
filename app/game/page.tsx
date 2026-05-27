@@ -16,6 +16,7 @@ import { useLang } from '@/hooks/useLang';
 import { analyzeGame } from '@/lib/openai';
 import { AICoachAnalysis, GameSettings, PlayerColor } from '@/types/game';
 import { t } from '@/lib/translations';
+import { Cpu, Users, MoveRight, EyeOff, ArrowLeft, Bot } from 'lucide-react';
 
 // ─── Local game view ────────────────────────────────────────────────────────
 
@@ -110,29 +111,33 @@ function LocalGame({
   const validDestinations = new Set(validMoves.map(m => m.to));
 
   return (
-    <div className={`min-h-[calc(100vh-57px)] ${isDark ? 'bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950' : 'bg-gray-50'}`}>
+    <div className={`min-h-[calc(100vh-57px)] ${isDark ? 'bg-[#080E1A]' : 'bg-gray-50'}`}>
       <div className="max-w-2xl mx-auto px-4 py-4 flex flex-col gap-3">
 
         {/* Top bar */}
         <div className="flex items-center justify-between">
-          <div>
-            <span className="text-white font-black text-lg">
-              {isDarkMode && <span className="text-purple-400">🌑 </span>}
-              {isLongMode && <span className="text-red-400">♟️ </span>}
-              Backgammon Pro
-            </span>
-            <p className="text-white/30 text-xs">
-              {isAIMode ? (lang === 'ru' ? '🤖 vs ИИ' : '🤖 vs AI')
-                : (lang === 'ru' ? '👥 Локально' : '👥 Local')}
-              {isLongMode && (lang === 'ru' ? ' · Длинные нарды' : ' · Long rules')}
-              {isDarkMode && (lang === 'ru' ? ' · Тёмный режим' : ' · Dark mode')}
-            </p>
+          <div className="flex items-center gap-2.5">
+            {isDarkMode && <EyeOff size={14} className="text-violet-400" />}
+            {isLongMode && !isDarkMode && <MoveRight size={14} className="text-rose-400" />}
+            <div>
+              <span className="text-[#E8E4DC] font-black text-base tracking-tight">
+                Backgammon <span className="text-[#C9A84C]">Pro</span>
+              </span>
+              <p className="text-[#E8E4DC]/30 text-[11px] flex items-center gap-1.5 mt-0.5">
+                {isAIMode
+                  ? <><Cpu size={10} /> {lang === 'ru' ? 'vs ИИ' : 'vs AI'}</>
+                  : <><Users size={10} /> {lang === 'ru' ? 'Локально' : 'Local'}</>}
+                {isLongMode && <span>· {lang === 'ru' ? 'Длинные нарды' : 'Long'}</span>}
+                {isDarkMode && <span>· {lang === 'ru' ? 'Тёмный режим' : 'Dark'}</span>}
+              </p>
+            </div>
           </div>
           <button
             onClick={onNewGame}
-            className="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-sm transition-colors"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/6 hover:bg-white/12 text-[#E8E4DC]/60 hover:text-[#E8E4DC] text-xs transition-colors border border-white/5"
           >
-            ← {t.game.newGame[lang]}
+            <ArrowLeft size={13} />
+            {t.game.newGame[lang]}
           </button>
         </div>
 
@@ -144,7 +149,7 @@ function LocalGame({
           isYou={false}
           statusOverride={
             isAIThinking && gameState.currentPlayer === oppColor
-              ? (lang === 'ru' ? '🤖 ИИ думает…' : '🤖 AI thinking…')
+              ? (lang === 'ru' ? 'ИИ думает…' : 'AI thinking…')
               : undefined
           }
         />
@@ -187,13 +192,14 @@ function LocalGame({
               initial={{ opacity: 0, y: -4 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -4 }}
-              className="px-4 py-2.5 bg-purple-900/40 border border-purple-500/40 rounded-xl text-purple-200 text-sm font-bold text-center flex items-center justify-center gap-2"
+              className="px-4 py-2.5 bg-violet-900/30 border border-violet-500/25 rounded-xl text-violet-200/80 text-sm font-semibold text-center flex items-center justify-center gap-2"
             >
               <motion.span
                 animate={{ rotate: 360 }}
-                transition={{ duration: 1.5, repeat: Infinity, ease: 'linear' }}
+                transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
+                className="inline-flex"
               >
-                🤖
+                <Bot size={15} className="text-violet-400" />
               </motion.span>
               {lang === 'ru' ? 'Ход ИИ — подождите...' : 'AI is thinking — please wait...'}
             </motion.div>
@@ -248,8 +254,8 @@ function LocalGame({
               disabled={!canRoll}
               className={`flex-1 py-3 rounded-xl font-black text-sm transition-all ${
                 canRoll
-                  ? 'bg-gradient-to-r from-yellow-500 to-orange-500 text-white shadow-lg'
-                  : 'bg-gray-700/40 text-gray-500 cursor-not-allowed'
+                  ? 'bg-[#C9A84C] text-[#080E1A] shadow-lg shadow-[#C9A84C]/15 hover:bg-[#E2C97E]'
+                  : 'bg-white/5 text-white/20 cursor-not-allowed border border-white/5'
               }`}
             >
               {isAIThinking ? (lang === 'ru' ? 'ИИ…' : 'AI…') : t.game.rollDice[lang]}
@@ -330,7 +336,7 @@ function OnlineGame({
   const validDestinations = new Set(game.validMoves.map(m => m.to));
 
   return (
-    <div className={`min-h-[calc(100vh-57px)] ${isDark ? 'bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950' : 'bg-gray-50'}`}>
+    <div className={`min-h-[calc(100vh-57px)] ${isDark ? 'bg-[#080E1A]' : 'bg-gray-50'}`}>
       <div className="max-w-2xl mx-auto px-4 py-4 flex flex-col gap-3">
 
         {/* Top bar */}
@@ -338,7 +344,7 @@ function OnlineGame({
           <div>
             <span className="text-white font-black text-lg">Backgammon Pro</span>
             <p className="text-white/30 text-xs">
-              🌐 {lang === 'ru' ? 'Онлайн' : 'Online'} · {settings.roomCode}
+              {lang === 'ru' ? 'Онлайн' : 'Online'} · {settings.roomCode}
             </p>
           </div>
           <button onClick={onNewGame} className="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-sm transition-colors">
@@ -403,8 +409,8 @@ function OnlineGame({
               disabled={!canRoll}
               className={`flex-1 py-3 rounded-xl font-black text-sm transition-all ${
                 canRoll
-                  ? 'bg-gradient-to-r from-yellow-500 to-orange-500 text-white shadow-lg'
-                  : 'bg-gray-700/40 text-gray-500 cursor-not-allowed'
+                  ? 'bg-[#C9A84C] text-[#080E1A] shadow-lg shadow-[#C9A84C]/15 hover:bg-[#E2C97E]'
+                  : 'bg-white/5 text-white/20 cursor-not-allowed border border-white/5'
               }`}
             >
               {game.isMyTurn ? t.game.rollDice[lang] : t.game.opponentTurn[lang]}
@@ -460,7 +466,7 @@ export default function GamePage() {
 
   if (!settings) {
     return (
-      <div className={`min-h-[calc(100vh-57px)] ${isDark ? 'bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950' : 'bg-gray-50'} flex items-center justify-center p-4`}>
+      <div className={`min-h-[calc(100vh-57px)] ${isDark ? 'bg-[#080E1A]' : 'bg-gray-50'} flex items-center justify-center p-4`}>
         <GameSetup onStart={handleStart} />
       </div>
     );
@@ -484,20 +490,28 @@ function DarkModeCounters({ gameState, lang }: { gameState: any; lang: 'en' | 'r
   };
   const sections = ['left','mid','right','bar'] as const;
   return (
-    <div className="bg-purple-900/20 border border-purple-500/20 rounded-xl p-3 text-xs">
-      <div className="text-purple-300 font-semibold mb-2">🌑 {lang === 'ru' ? 'Позиции шашек' : 'Checker Positions'}</div>
+    <div className="bg-violet-500/6 border border-violet-500/15 rounded-xl p-3 text-xs">
+      <div className="text-violet-300/70 font-semibold mb-2 uppercase tracking-wide text-[10px]">
+        {lang === 'ru' ? 'Позиции шашек' : 'Checker Positions'}
+      </div>
       <div className="grid grid-cols-5 gap-2 text-center">
         {sections.map(s => (
           <div key={s} className="flex flex-col gap-1">
-            <div className="text-white/40 capitalize text-[10px]">{s}</div>
-            <div className="text-white/80">⚪ {count(s, 'white')}</div>
-            <div className="text-white/80">⚫ {count(s, 'black')}</div>
+            <div className="text-white/30 capitalize text-[10px]">{s}</div>
+            <div className="flex items-center justify-center gap-1 text-white/70">
+              <span className="w-2 h-2 rounded-full bg-[#E8E4DC] border border-[#aaa] inline-block flex-shrink-0" />
+              {count(s, 'white')}
+            </div>
+            <div className="flex items-center justify-center gap-1 text-white/70">
+              <span className="w-2 h-2 rounded-full bg-[#1a1a1a] border border-[#555] inline-block flex-shrink-0" />
+              {count(s, 'black')}
+            </div>
           </div>
         ))}
         <div className="flex flex-col gap-1">
-          <div className="text-white/40 text-[10px]">off</div>
-          <div className="text-white/80">⚪ {gameState.bearOff.white}</div>
-          <div className="text-white/80">⚫ {gameState.bearOff.black}</div>
+          <div className="text-white/30 text-[10px]">off</div>
+          <div className="text-[#C9A84C]/80 font-bold">{gameState.bearOff.white}</div>
+          <div className="text-[#C9A84C]/80 font-bold">{gameState.bearOff.black}</div>
         </div>
       </div>
     </div>

@@ -2,46 +2,72 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { Cpu, Users, Globe, BookOpen, Trophy, Smartphone, EyeOff, ArrowRight } from 'lucide-react';
 import { useLang } from '@/hooks/useLang';
-import { useTheme } from '@/hooks/useTheme';
 import { t } from '@/lib/translations';
+
+const FEATURE_ICONS = [BookOpen, Cpu, EyeOff, BookOpen, Trophy, Smartphone];
+
+// SVG icons replacing emoji
+const LUCIDE_FEATURE_ICONS = [
+  <BookOpen key="0" size={20} className="text-[#C9A84C]" />,
+  <Cpu        key="1" size={20} className="text-[#C9A84C]" />,
+  <EyeOff     key="2" size={20} className="text-[#C9A84C]" />,
+  <BookOpen   key="3" size={20} className="text-[#C9A84C]" />,
+  <Trophy     key="4" size={20} className="text-[#C9A84C]" />,
+  <Smartphone key="5" size={20} className="text-[#C9A84C]" />,
+];
 
 export default function HomePage() {
   const { lang } = useLang();
-  const { theme } = useTheme();
-  const isDark = theme === 'dark';
   const features = t.home.features[lang];
 
   return (
-    <div className={`min-h-[calc(100vh-57px)] ${isDark ? 'bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950' : 'bg-gray-50'}`}>
+    <div className="min-h-[calc(100vh-56px)] bg-[#080E1A]">
+
+      {/* Hero */}
       <div className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/5 via-transparent to-orange-500/5" />
-        <div className="max-w-4xl mx-auto px-4 py-20 text-center relative">
+        {/* Subtle radial glow */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full bg-[#C9A84C]/4 blur-3xl" />
+        </div>
+
+        <div className="max-w-3xl mx-auto px-6 pt-24 pb-20 text-center relative">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.5 }}
           >
-            <div className="text-6xl mb-4">🎲</div>
-            <h1 className="text-5xl md:text-6xl font-black text-white mb-4">
-              Backgammon <span className="text-yellow-400">Pro</span>
+            {/* Decorative board piece */}
+            <div className="flex justify-center mb-8">
+              <div className="relative w-14 h-14">
+                <div className="absolute inset-0 rounded-full bg-[#C9A84C]/8 border border-[#C9A84C]/20" />
+                <div className="absolute inset-[6px] rounded-full bg-[#C9A84C]/15 border border-[#C9A84C]/30" />
+                <div className="absolute inset-[13px] rounded-full bg-[#C9A84C] shadow-lg shadow-[#C9A84C]/20" />
+              </div>
+            </div>
+
+            <h1 className="text-5xl md:text-6xl font-black text-[#E8E4DC] mb-4 tracking-tight leading-none">
+              Backgammon <span className="text-[#C9A84C]">Pro</span>
             </h1>
-            <p className="text-xl text-white/60 mb-8 max-w-xl mx-auto">
+            <p className="text-lg text-[#E8E4DC]/45 mb-10 max-w-lg mx-auto leading-relaxed">
               {t.home.subtitle[lang]}
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
                 <Link
                   href="/game"
-                  className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl bg-gradient-to-r from-yellow-500 to-orange-500 text-white font-black text-lg shadow-xl hover:shadow-yellow-500/30 transition-shadow"
+                  className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl bg-[#C9A84C] text-[#080E1A] font-black text-base shadow-lg shadow-[#C9A84C]/20 hover:bg-[#E2C97E] transition-colors"
                 >
                   {t.home.playNow[lang]}
+                  <ArrowRight size={16} />
                 </Link>
               </motion.div>
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
                 <Link
                   href="/leaderboard"
-                  className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl bg-white/10 border border-white/10 text-white font-bold text-lg hover:bg-white/15 transition-colors"
+                  className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl bg-white/5 border border-white/8 text-[#E8E4DC]/70 font-semibold text-base hover:bg-white/8 hover:text-[#E8E4DC] transition-colors"
                 >
                   {t.nav.leaderboard[lang]}
                 </Link>
@@ -51,51 +77,73 @@ export default function HomePage() {
         </div>
       </div>
 
-      <div className="max-w-5xl mx-auto px-4 py-16">
+      {/* Features grid */}
+      <div className="max-w-5xl mx-auto px-6 py-16">
+        <motion.p
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          className="text-xs font-semibold uppercase tracking-widest text-[#C9A84C]/60 text-center mb-3"
+        >
+          {lang === 'ru' ? 'Возможности' : 'Features'}
+        </motion.p>
         <motion.h2
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
-          className="text-2xl font-black text-white text-center mb-10"
+          className="text-2xl font-black text-[#E8E4DC] text-center mb-10"
         >
           {t.home.featuresTitle[lang]}
         </motion.h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
           {features.map((f, i) => (
             <motion.div
               key={i}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.08 }}
-              className="bg-gray-900/60 border border-white/5 rounded-2xl p-5 hover:border-yellow-500/20 transition-colors"
+              transition={{ delay: i * 0.07 }}
+              className="bg-[#0F1725] border border-white/5 rounded-xl p-5 hover:border-[#C9A84C]/20 hover:bg-[#111D30]/80 transition-all group"
             >
-              <div className="text-3xl mb-3">{f.icon}</div>
-              <h3 className="text-white font-bold mb-1">{f.title}</h3>
-              <p className="text-white/50 text-sm">{f.desc}</p>
+              <div className="w-9 h-9 rounded-lg bg-[#C9A84C]/8 border border-[#C9A84C]/15 flex items-center justify-center mb-3 group-hover:bg-[#C9A84C]/15 transition-colors">
+                {LUCIDE_FEATURE_ICONS[i]}
+              </div>
+              <h3 className="text-[#E8E4DC] font-bold text-sm mb-1">{f.title}</h3>
+              <p className="text-[#E8E4DC]/40 text-sm leading-relaxed">{f.desc}</p>
             </motion.div>
           ))}
         </div>
       </div>
 
-      <div className="max-w-3xl mx-auto px-4 py-8 mb-16">
+      {/* Dark mode callout */}
+      <div className="max-w-3xl mx-auto px-6 pb-20">
         <motion.div
           initial={{ opacity: 0, scale: 0.98 }}
           whileInView={{ opacity: 1, scale: 1 }}
-          className="bg-gradient-to-br from-purple-900/40 to-gray-900 border border-purple-500/20 rounded-2xl p-8 text-center"
+          className="relative overflow-hidden bg-[#0F1725] border border-[#C9A84C]/15 rounded-2xl p-8 text-center"
         >
-          <div className="text-4xl mb-3">🌑</div>
-          <h3 className="text-2xl font-black text-white mb-2">{t.home.darkModeTitle[lang]}</h3>
-          <p className="text-white/60 max-w-md mx-auto">{t.home.darkModeDesc[lang]}</p>
-          <Link
-            href="/game"
-            className="inline-flex mt-6 px-6 py-3 rounded-xl bg-purple-500/20 border border-purple-500/40 text-purple-300 font-semibold hover:bg-purple-500/30 transition-colors"
-          >
-            {t.home.tryDark[lang]}
-          </Link>
+          <div className="absolute inset-0 bg-gradient-to-br from-[#C9A84C]/4 via-transparent to-transparent pointer-events-none" />
+          <div className="relative">
+            <div className="flex justify-center mb-4">
+              <div className="w-11 h-11 rounded-xl bg-[#C9A84C]/8 border border-[#C9A84C]/20 flex items-center justify-center">
+                <EyeOff size={20} className="text-[#C9A84C]" />
+              </div>
+            </div>
+            <h3 className="text-xl font-black text-[#E8E4DC] mb-2">{t.home.darkModeTitle[lang]}</h3>
+            <p className="text-[#E8E4DC]/45 max-w-md mx-auto text-sm leading-relaxed">
+              {t.home.darkModeDesc[lang]}
+            </p>
+            <Link
+              href="/game"
+              className="inline-flex items-center gap-2 mt-6 px-5 py-2.5 rounded-lg bg-[#C9A84C]/10 border border-[#C9A84C]/25 text-[#C9A84C] text-sm font-semibold hover:bg-[#C9A84C]/20 transition-colors"
+            >
+              {t.home.tryDark[lang]}
+              <ArrowRight size={14} />
+            </Link>
+          </div>
         </motion.div>
       </div>
 
-      <footer className="border-t border-white/5 py-8 text-center text-white/30 text-sm">
-        <p>{t.home.footer[lang]}</p>
+      <footer className="border-t border-white/4 py-7 text-center text-[#E8E4DC]/20 text-xs">
+        {t.home.footer[lang]}
       </footer>
     </div>
   );
